@@ -40,6 +40,9 @@ Route::get('/', function () {
     return view('frontend.index');
 });
 
+Route::get('/add-post', [PostController::class, 'addPost'])->name('post.add');
+Route::post('/user-post-store', [PostController::class, 'userPostStore'])->name('user.post.store');
+
 Route::post('/{poll}{id}/vote', [PollController::class,'vote'])->name('poll.vote');
 
 Route::middleware(['auth'])->group(function () {

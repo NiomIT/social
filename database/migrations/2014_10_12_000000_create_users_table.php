@@ -22,7 +22,13 @@ return new class extends Migration
             $table->string('password');
             $table->string('photo')->nullable();
             $table->string('phone')->nullable();
-            $table->text('address')->nullable();
+            $table->text('category_id');
+            $table->text('subcategory_id')->nullable();
+            $table->text('subcategory_name')->nullable();
+            $table->text('city_id')->nullable();
+            $table->text('area_id')->nullable();
+            $table->text('house_no')->nullable();
+            $table->text('road_no')->nullable();
             $table->string('role')->default('user')->enum(['admin', 'vendor', 'user']);
             $table->string('status')->default('active')->enum(['active', 'inactive']);
             $table->rememberToken();

@@ -65,9 +65,9 @@ class PostController extends Controller
 
         $post = new Post;
 
-        $post->post_title_en = $request->post_title_en;
+        $post->post_title = $request->post_title;
         if($request->post_title_bn == ''){
-            $post->post_title_bn = $request->post_title_en;
+            $post->post_title_bn = $request->post_title;
         }else{
             $post->post_title_bn = $request->post_title_bn;
         }
@@ -88,7 +88,7 @@ class PostController extends Controller
             $request->status = 1;
         }
 
-        $str = $request->post_title_en;
+        $str = $request->post_title;
         $post_slug = trim(preg_replace('/\s+/','-',$str));
         $post->status = $request->status;
         $post->post_slug = $post_slug;
@@ -166,9 +166,9 @@ class PostController extends Controller
 
 
 
-        $post->post_title_en = $request->post_title_en;
+        $post->post_title = $request->post_title;
         if($request->post_title_bn == ''){
-            $post->post_title_bn = $request->post_title_en;
+            $post->post_title_bn = $request->post_title;
         }else{
             $post->post_title_bn = $request->post_title_bn;
         }
@@ -189,7 +189,7 @@ class PostController extends Controller
             $request->status = 1;
         }
 
-      $post->post_slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', strtolower($request->post_title_en)));
+      $post->post_slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', strtolower($request->post_title)));
 
         $post->status = $request->status;
         $post->map_url = $request->map_url;
@@ -292,4 +292,61 @@ class PostController extends Controller
         $posts = Post::whereDate('created_at', $selectedDate)->get();
         return view('backend.post.archive_wise_post',compact('posts'));
     }
+
+    public function addPost()
+{
+
+    return view('frontend.page.add_post');
+}
+
+
+public function userPostStore(Request $request)
+{
+
+    $id = Auth::user()->id;
+    $userData = User::find($id);
+    $category = Category::where('id', $userData->category_id)->first();
+    $subcategory = Subcategory::where('id', $userData->subcategory_id ?? null)->first();
+
+    $request->validate([
+        'post_title' => 'required|string|max:255',
+        'post_thambnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    // Handling the thumbnail image upload
+    if ($request->hasFile('post_thambnail')) {
+        $image = $request->file('post_thambnail');
+        $name_gen = hexdec(uniqid()) . '.' . $image->getClientOriginalExtension();
+        $image->move(public_path('upload/post'), $name_gen);
+        $post_thambnail = 'upload/post/' . $name_gen;
+    } else {
+        $post_thambnail = $request->post_thambnail;
+    }
+
+    // Creating new Post
+    $post = new Post;
+    $post->post_title = $request->post_title;
+
+    // Creating the post slug
+    $post_slug = strtolower(trim(preg_replace('/\s+/', '-', $request->post_title)));
+    $post->post_slug = $post_slug;
+    $post->status = 1;
+    $post->post_thambnail = $post_thambnail;
+    $post->user_id = $userData->id;
+    $post->category_id = $category->id;
+
+
+    if ($subcategory) {
+        $post->subcategory_id = $subcategory->id;
+    }
+
+    $post->created_at = Carbon::now();
+    $post->save();
+
+    // Flash success message and redirect
+    Session::flash('success', 'Post Inserted Successfully');
+    return redirect()->back();
+}
+
+
 }

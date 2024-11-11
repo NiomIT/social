@@ -27,7 +27,7 @@
             </li>
         </ul>
         <ul class="navbar-nav mr-5 flex-row" id="main_menu">
-            <a class="navbar-brand nav-item mr-lg-5" href="index.html"><img
+            <a class="navbar-brand nav-item mr-lg-5" href="/"><img
                     src="{{ 'frontend' }}/assets/images/logo-64x64.png" width="40" height="40" class="mr-3"
                     alt="Logo"></a>
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -121,7 +121,7 @@
                 </ul>
             </form>
             <li class="nav-item s-nav">
-                <a href="profile.html" class="nav-link nav-links">
+                <a href="/dashboard" class="nav-link nav-links">
                     <div class="menu-user-image">
                         <img src="{{ 'frontend' }}/assets/images/users/user-4.jpg" class="menu-user-img ml-1"
                             alt="Menu Image">

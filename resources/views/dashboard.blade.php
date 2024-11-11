@@ -10,6 +10,7 @@
                         <h2 class="h2">My Account</h2>
 
                         <div class="content">
+                            <p><a class="text-info" href="{{ route('post.add') }}">add post</a></p>
                             <p><a class="text-info" href="/dashboard">My Profile</a></p>
                             <p><a class="text-info" href="{{ route('user.profile.edit') }}">Edit Profile</a></p>
                             <p><a class="text-info" href="{{ route('user.change.password') }}">Change Password</a></p>

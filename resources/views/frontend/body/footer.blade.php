@@ -1,4 +1,4 @@
-<footer id="footer-main" class="footer navbar navbar-expand-lg shadow-sm fixed-bottom">
+{{-- <footer id="footer-main" class="footer navbar navbar-expand-lg shadow-sm fixed-bottom">
     <div class="container">
         <!-- Upper section with page links -->
         <ul class="nav navbar-nav mx-auto text-center">
@@ -12,4 +12,4 @@
             <p class="text-muted">© 2024 Your Company Name. All Rights Reserved.</p>
         </div>
     </div>
-</footer>
+</footer> --}}
