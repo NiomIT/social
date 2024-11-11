@@ -33,6 +33,10 @@ use App\Http\Controllers\VoteController;
 
 Route::get('/get-countdown-time', [CountdownController::class, 'getCountdownTime']);
 
+Route::get('/add-post', [PostController::class, 'addPost'])->name('post.add');
+
+Route::get('/{username}', [UserController::class, 'UserDashboard'])->name('dashboard');
+
 Route::get('subcategory/category-subcategory/ajax/{category_id}',[PostController::class,'getsubcategory'])->name('subcategory.post.ajax');
 
 
@@ -40,7 +44,7 @@ Route::get('/', function () {
     return view('frontend.index');
 });
 
-Route::get('/add-post', [PostController::class, 'addPost'])->name('post.add');
+
 Route::post('/user-post-store', [PostController::class, 'userPostStore'])->name('user.post.store');
 
 Route::post('/{poll}{id}/vote', [PollController::class,'vote'])->name('poll.vote');

@@ -120,39 +120,50 @@
                     </div>
                 </ul>
             </form>
-            <li class="nav-item s-nav">
-                <a href="/dashboard" class="nav-link nav-links">
-                    <div class="menu-user-image">
-                        <img src="{{ 'frontend' }}/assets/images/users/user-4.jpg" class="menu-user-img ml-1"
-                            alt="Menu Image">
-                    </div>
-                </a>
-            </li>
+
             <li class="nav-item s-nav nav-icon dropdown">
                 <a href="settings.html" data-toggle="dropdown" data-placement="bottom" data-title="Settings"
-                    class="nav-link settings-link rm-drop-mobile drop-w-tooltip" id="settings-dropdown"><img
-                        src="{{ 'frontend' }}/assets/images/icons/navbar/settings.png" class="nav-settings"
-                        alt="navbar icon"></a>
+                    class="nav-link settings-link rm-drop-mobile drop-w-tooltip" id="settings-dropdown">
+                    @if (Auth::check())
+                        <img src="{{ asset(Auth::user()->photo) }}" class="nav-settings" alt="navbar icon"
+                            style="height:50px;width:50px" alt="User Photo">
+                    @else
+                        <script>
+                            window.location = "{{ url('/login') }}";
+                        </script>
+                    @endif
+                </a>
                 <div class="dropdown-menu dropdown-menu-right settings-dropdown shadow-sm"
                     aria-labelledby="settings-dropdown">
-                    <a class="dropdown-item" href="#">
-                        <img src="{{ 'frontend' }}/assets/images/icons/navbar/help.png" alt="Navbar icon"> Help
-                        Center</a>
-                    <a class="dropdown-item d-flex align-items-center dark-mode" onClick="event.stopPropagation();"
-                        href="#">
-                        <img src="{{ 'frontend' }}/assets/images/icons/navbar/moon.png" alt="Navbar icon"> Dark
-                        Mode
-                        <button type="button" class="btn btn-lg btn-toggle ml-auto" data-toggle="button"
-                            aria-pressed="false" autocomplete="off">
-                            <div class="handle"></div>
-                        </button>
+                    <a class="dropdown-item" href="{{ route('post.add') }}">
+                        <i class="fas fa-plus mr-2"></i> Add Post
                     </a>
-                    <a class="dropdown-item" href="#">
-                        <img src="{{ 'frontend' }}/assets/images/icons/navbar/gear-1.png" alt="Navbar icon">
-                        Settings</a>
-                    <a class="dropdown-item logout-btn" href="#">
-                        <img src="{{ 'frontend' }}/assets/images/icons/navbar/logout.png" alt="Navbar icon"> Log
-                        Out</a>
+
+                    @if (Auth::check())
+                        <a class="dropdown-item" href="/{{ Auth::user()->username }}">
+                            <i class="fas fa-user mr-2"></i> My Profile
+                        </a>
+                    @else
+                        <script>
+                            window.location = "{{ url('/login') }}";
+                        </script>
+                    @endif
+
+
+                    <a class="dropdown-item d-flex align-items-center dark-mode" onClick="event.stopPropagation();"
+                        href="{{ route('user.change.password') }}">
+                        <i class="fas fa-key mr-2"></i> Change Password
+                    </a>
+
+                    <a class="dropdown-item d-flex align-items-center dark-mode" onClick="event.stopPropagation();"
+                        href="{{ route('user.profile.edit') }}">
+                        <i class="fas fa-edit mr-2"></i> Edit Profile
+                    </a>
+
+                    <a class="dropdown-item logout-btn" href="{{ route('user.logout') }}">
+                        <i class="fas fa-sign-out-alt mr-2"></i> Log Out
+                    </a>
+
                 </div>
             </li>
             <button type="button" class="btn nav-link" id="menu-toggle"><img

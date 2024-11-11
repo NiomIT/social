@@ -11,3 +11,5 @@
  <link href="https://vjs.zencdn.net/7.4.1/video-js.css" rel="stylesheet">
  <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js" type="text/javascript"></script>
  <script src="{{ 'frontend' }}/assets/js/load.js" type="text/javascript"></script>
+ <!-- Font Awesome CDN -->
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">

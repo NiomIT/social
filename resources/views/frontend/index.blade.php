@@ -1,7 +1,7 @@
 @extends('frontend.master')
 @section('main')
     @php
-        $posts = App\Models\Post::latest()->get();
+        $posts = App\Models\Post::with('user')->get();
     @endphp
 
     <div class="row newsfeed-right-side-content mt-3">
@@ -14,7 +14,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <select name="" id="" class="form-control">
-                                            <option value="">- Location Year -</option>
+                                            <option value="">- Location-</option>
                                             <option value="1">Dhaka</option>
                                             <option value="2">Rajshahi</option>
                                         </select>
@@ -46,11 +46,11 @@
                 @foreach ($posts as $post)
                     <div class="post border-bottom p-3 bg-white w-shadow">
                         <div class="media text-muted pt-3">
-                            <img src="{{ 'frontend' }}/assets/images/users/user-1.jpg" alt="Online user"
-                                class="mr-3 post-user-image">
+                            <img src="{{ asset($post->user->photo) }}" alt="Online user" class="mr-3 post-user-image">
                             <div class="media-body pb-3 mb-0 small lh-125">
                                 <div class="d-flex justify-content-between align-items-center w-100">
-                                    <a href="#" class="text-gray-dark post-user-name">John Michael</a>
+                                    <a href="#"
+                                        class="text-gray-dark post-user-name">{{ $post->user->name ?? 'n/a' }}</a>
                                     <div class="dropdown">
                                         <a href="#" class="post-more-settings" role="button" data-toggle="dropdown"
                                             id="postOptions" aria-haspopup="true" aria-expanded="false">
@@ -98,7 +98,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <span class="d-block">3 hours ago <i class='bx bx-globe ml-3'></i></span>
+                                <span class="d-block">{{ $post->created_at->diffForHumans() }}<i
+                                        class='bx bx-globe ml-3'></i></span>
                             </div>
                         </div>
                         <div class="mt-3">

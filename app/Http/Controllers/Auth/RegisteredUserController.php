@@ -48,9 +48,14 @@ class RegisteredUserController extends Controller
 
         $subcategory = $request->subcategory_id ?? $request->subcategory_name;
 
-        $photoPath = null;
+            // Handling the thumbnail image upload
         if ($request->hasFile('photo')) {
-            $photoPath = $request->file('photo')->store('photos', 'public');
+            $image = $request->file('photo');
+            $name_gen = hexdec(uniqid()) . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('upload/user_images'), $name_gen);
+            $photo = 'upload/post/' . $name_gen;
+        } else {
+            $photo = $request->photo;
         }
 
         // Create the user
@@ -59,7 +64,7 @@ class RegisteredUserController extends Controller
         $user->username = $request->username;
         $user->email = $request->email;
         $user->password = bcrypt($request->password); // Encrypt the password
-        $user->photo = $photoPath;
+        $user->photo = $photo;
         $user->category_id = $request->category_id;
 
         // Check if the subcategory is an ID or a new name
