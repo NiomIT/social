@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 12, 2024 at 04:14 AM
+-- Generation Time: Nov 12, 2024 at 10:12 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -101,10 +101,31 @@ INSERT INTO `categories` (`id`, `category_name`, `slug`, `featured_category`, `s
 
 CREATE TABLE `comments` (
   `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` varchar(255) NOT NULL,
+  `post_id` varchar(255) NOT NULL,
+  `comment_text` text NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `comments`
+--
+
+INSERT INTO `comments` (`id`, `user_id`, `post_id`, `comment_text`, `created_at`, `updated_at`) VALUES
+(2, '16', '56', 'full gulo sundor', '2024-11-12 08:43:31', '2024-11-12 08:43:31');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `dislikes`
+--
+
+CREATE TABLE `dislikes` (
+  `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `post_id` bigint(20) UNSIGNED NOT NULL,
-  `parent_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `comment` text NOT NULL,
+  `dislike_count` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -159,6 +180,21 @@ CREATE TABLE `failed_jobs` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `likes`
+--
+
+CREATE TABLE `likes` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `post_id` bigint(20) UNSIGNED NOT NULL,
+  `like_count` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `migrations`
 --
 
@@ -195,7 +231,12 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (57, '2023_07_27_142352_create_votes_table', 7),
 (58, '2023_07_27_142633_create_polls_table', 8),
 (59, '2023_07_27_145526_create_votes_table', 9),
-(60, '2023_07_27_204423_create_subscribes_table', 10);
+(60, '2023_07_27_204423_create_subscribes_table', 10),
+(65, '2024_11_12_114348_create_comments_table', 11),
+(69, '2024_11_12_114718_create_likes_table', 12),
+(70, '2024_11_12_115659_create_replies_table', 12),
+(71, '2024_11_12_131725_create_dislikes_table', 12),
+(72, '2024_11_12_144108_create_comments_table', 13);
 
 -- --------------------------------------------------------
 
@@ -301,6 +342,28 @@ INSERT INTO `posts` (`id`, `user_id`, `category_id`, `subcategory_id`, `post_tit
 (59, 15, 11, 18, 'kemon aco sobai ?', 'kemon-aco-sobai-?', 'upload/post/1815412824439426.jpg', 1, NULL, '2024-11-11 08:09:44', '2024-11-11 08:09:44'),
 (60, 18, 11, 19, 'hi there this is new post', 'hi-there-this-is-new-post', 'upload/post/1815413697207763.jpg', 1, NULL, '2024-11-11 08:23:36', '2024-11-11 08:23:36'),
 (61, 16, 11, 25, 'this another post', 'this-another-post', 'upload/post/1815426827050270.png', 1, NULL, '2024-11-11 11:52:18', '2024-11-11 11:52:18');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `replies`
+--
+
+CREATE TABLE `replies` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `comment_id` bigint(20) UNSIGNED NOT NULL,
+  `reply_text` text NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `replies`
+--
+
+INSERT INTO `replies` (`id`, `user_id`, `comment_id`, `reply_text`, `created_at`, `updated_at`) VALUES
+(1, 17, 2, 'thanks', '2024-11-12 09:03:08', '2024-11-12 09:03:08');
 
 -- --------------------------------------------------------
 
@@ -486,6 +549,12 @@ ALTER TABLE `comments`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `dislikes`
+--
+ALTER TABLE `dislikes`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `events`
 --
 ALTER TABLE `events`
@@ -497,6 +566,12 @@ ALTER TABLE `events`
 ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
+
+--
+-- Indexes for table `likes`
+--
+ALTER TABLE `likes`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `migrations`
@@ -536,6 +611,12 @@ ALTER TABLE `polls`
 -- Indexes for table `posts`
 --
 ALTER TABLE `posts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `replies`
+--
+ALTER TABLE `replies`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -599,6 +680,12 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `dislikes`
+--
+ALTER TABLE `dislikes`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
@@ -614,10 +701,16 @@ ALTER TABLE `failed_jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `likes`
+--
+ALTER TABLE `likes`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 
 --
 -- AUTO_INCREMENT for table `options`
@@ -642,6 +735,12 @@ ALTER TABLE `polls`
 --
 ALTER TABLE `posts`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+
+--
+-- AUTO_INCREMENT for table `replies`
+--
+ALTER TABLE `replies`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `settings`

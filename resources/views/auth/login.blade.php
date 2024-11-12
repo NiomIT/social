@@ -1,90 +1,68 @@
-<!DOCTYPE html>
-<html dir="ltr" lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('frontend.master')
+@section('main')
+<div class="row newsfeed-right-side-content mb-5 mt-5">
+   <div class="col-md-8 second-section mx-auto" id="page-content-wrapper">
+      <div class="posts-section mb-5">
+         <div class="post border-bottom p-3 bg-white w-shadow">
+            <form action="{{ route('login') }}" method="POST" class="pt-5" data-form="validate">
+               @csrf
+               <div class="col-md-12" id="email_div">
+                  <label for="">Email</label>
+                  <div class="form-group">
+                     <input type="email" id="email" class="form-control" name="email"
+                        placeholder="Email Address" id="email">
+                  </div>
+               </div>
+               <!-- Password -->
+               <div class="col-md-12">
+   <label for="password">Password</label>
+   <div class="form-group position-relative">
+      <input type="password" class="form-control" name="password" id="password" required>
+      <span onclick="togglePasswordVisibility()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+         <i id="eyeIcon" class="fas fa-eye"></i>
+      </span>
+   </div>
+</div>
+               <div class="checkbox">
+                  <label>
+                  <input type="checkbox" name="checkbox">
+                  <span>Remember me</span>
+                  </label>
+               </div>
+               <!-- Sign Up Button -->
+               <div class="col-md-12 text-right">
+                  <div class="form-group">
+                     <button type="submit" class="btn btn-primary sign-up">Login</button>
+                  </div>
+               </div>
+               <p class="help-block clearfix">
+                  {{-- <a href="{{ route('password.request') }}" class="btn-link pull-left">Forgot Username or Password?</a> --}}
+                  <a  class="btn-link pull-left">Forgot Username or Password?</a>
+                  <a href="{{ route('register') }}" class="btn-link pull-right">Create An Account</a>
+               </p>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
 
-     <!-- ==== Document Title ==== -->
-     <title>{{ setting('site_title') }}</title>
+<!-- Font Awesome er link add korte hobe -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-     <!-- ==== Document Meta ==== -->
-     @include('frontend.body.meta_document')
-
-     <!-- ==== Favicons ==== -->
-     <link rel="icon" href="{{ asset(setting('favicon_icon') ?? 'Null') }}" type="image/png">
-
-     <!-- css_link Section Start -->
-     @include('frontend.body.css_link')
-     <!-- css_link Section End -->
-
-
-</head>
-<body>
-
-    <!-- Preloader Start -->
-    <div id="preloader">
-        <div class="preloader bg--color-1--b" data-preloader="1">
-            <div class="preloader--inner"></div>
-        </div>
-    </div>
-    <!-- Preloader End -->
-
-    <!-- Wrapper Start -->
-    <div class="wrapper">
-        <!-- Login Section Start -->
-        <div class="login--section pd--100-0 bg--overlay" data-bg-img="{{ asset('frontend') }}/assets/img/login-img/bg.jpg">
-            <div class="container">
-                <!-- Login Form Start -->
-                <div class="login--form">
-                    <div class="title">
-                        <h1 class="h1">Login</h1>
-                        <p><a class="btn-link pull-right" href="/"></i>Back Home</a></p>
-                    </div>
-
-
-                    <form method="Post" action="{{ route('login') }}" data-form="validate">
-                        @csrf
-                        <div class="form-group">
-                            <label>
-                                <span>Username or Email Address</span>
-                                <input type="email" name="email" id="email" class="form-control" required>
-                            </label>
-                        </div>
-
-                        <div class="form-group">
-                            <label>
-                                <span>Password</span>
-                                <input type="password" name="password" class="form-control" required>
-                            </label>
-                        </div>
-
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="checkbox">
-                                <span>Remember me</span>
-                            </label>
-                        </div>
-
-                        <button type="submit" class="btn btn-lg btn-block btn-primary">Log in</button>
-
-                        <p class="help-block clearfix">
-                            {{-- <a href="{{ route('password.request') }}" class="btn-link pull-left">Forgot Username or Password?</a> --}}
-                            <a  class="btn-link pull-left">Forgot Username or Password?</a>
-                            <a href="{{ route('register') }}" class="btn-link pull-right">Create An Account</a>
-                        </p>
-                    </form>
-                </div>
-                <!-- Login Form End -->
-            </div>
-        </div>
-        <!-- Login Section End -->
-    </div>
-    <!-- Wrapper End -->
-
-    <!-- js_link Section Start -->
-    @include('frontend.body.js_link')
-    <!-- js_link Section End -->
-
-</body>
-</html>
+<script>
+   function togglePasswordVisibility() {
+      var passwordField = document.getElementById("password");
+      var eyeIcon = document.getElementById("eyeIcon");
+      
+      if (passwordField.type === "password") {
+         passwordField.type = "text";
+         eyeIcon.classList.remove("fa-eye");
+         eyeIcon.classList.add("fa-eye-slash");
+      } else {
+         passwordField.type = "password";
+         eyeIcon.classList.remove("fa-eye-slash");
+         eyeIcon.classList.add("fa-eye");
+      }
+   }
+</script>
+@endsection
