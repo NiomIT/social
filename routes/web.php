@@ -35,7 +35,7 @@ Route::get('/get-countdown-time', [CountdownController::class, 'getCountdownTime
 
 Route::get('/add-post', [PostController::class, 'addPost'])->name('post.add');
 
-Route::get('/{username}', [UserController::class, 'UserDashboard'])->name('dashboard');
+Route::get('/dashboard', [UserController::class, 'UserDashboard'])->name('dashboard');
 
 Route::get('subcategory/category-subcategory/ajax/{category_id}',[PostController::class,'getsubcategory'])->name('subcategory.post.ajax');
 
