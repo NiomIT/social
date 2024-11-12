@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ReactionController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\ProfileController;
@@ -33,10 +34,15 @@ use App\Http\Controllers\VoteController;
 |
  */
 // routes/web.php
+Route::post('/like', [ReactionController::class, 'like']);
+Route::post('/dislike', [ReactionController::class, 'dislike']);
 Route::post('/like', [LikeController::class, 'like']);
 Route::post('/dislike', [DislikeController::class, 'dislike']);
 Route::post('/comment', [CommentController::class, 'store'])->name('comment.store');
 Route::post('/comments/reply', [CommentController::class, 'reply'])->name('comments.reply');
+Route::post('/like', [LikeController::class, 'store']);
+Route::post('/dislike', [DislikeController::class, 'store']);
+
 
 Route::get('/get-countdown-time', [CountdownController::class, 'getCountdownTime']);
 

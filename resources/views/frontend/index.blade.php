@@ -101,17 +101,23 @@ $posts = App\Models\Post::with(['user', 'comments.user', 'comments.replies.user'
    <img src="{{ asset($post->post_thambnail) }}" class="post-content" alt="post image" style="height:400px;">
    </div>
    <div class="mb-3">
-   <!-- Reactions -->
-   <div class="argon-reaction">
-   <span class="like-btn">
-   <a href="#" class="post-card-buttons"><i class='bx bxs-like mr-2'></i> 67</a>
-   </span>
-   </div>
-   <div class="argon-reaction">
-   <span class="like-btn">
-   <a href="#" class="post-card-buttons"><i class='bx bxs-dislike mr-2'></i> 67</a>
-   </span>
-   </div>
+ <!-- Reactions -->
+<div class="argon-reaction">
+    <span class="like-btn">
+        <a href="#" class="post-card-buttons" id="like-btn-{{ $post->id }}" data-post-id="{{ $post->id }}" data-user-id="{{ auth()->user()->id }}">
+            <i class='bx bxs-like mr-2'></i>
+            <span id="like-count-{{ $post->id }}">{{ $post->likes->count() }}</span>
+        </a>
+    </span>
+</div>
+<div class="argon-reaction">
+    <span class="dislike-btn">
+        <a href="#" class="post-card-buttons" id="dislike-btn-{{ $post->id }}" data-post-id="{{ $post->id }}" data-user-id="{{ auth()->user()->id }}">
+            <i class='bx bxs-dislike mr-2'></i>
+            <span id="dislike-count-{{ $post->id }}">{{ $post->dislikes->count() }}</span>
+        </a>
+    </span>
+</div>
    <a href="javascript:void(0)" class="post-card-buttons" data-toggle="collapse" data-target="#comments-{{ $post->id }}">
    <i class='bx bx-message-rounded mr-2'></i>  {{ $post->comments->count() }}
    </a>
@@ -162,10 +168,12 @@ $posts = App\Models\Post::with(['user', 'comments.user', 'comments.replies.user'
    <ul class="media-list comments-list">
    <li class="media comment-form">
    <a href="#" class="pull-left">
-   <img src="{{ 'frontend' }}/assets/images/users/user-4.jpg" alt="" class="img-circle">
+ 
    </a>
    <div class="media-body">
    <meta name="csrf-token" content="{{ csrf_token() }}">
+   @if(auth()->check())
+   <!-- Logged-in users can see the comment form -->
    <form action="{{ route('comment.store') }}" method="POST" role="form" id="comment-form">
    @csrf
    <input type="hidden" name="post_id" value="{{ $post->id }}">
@@ -182,52 +190,64 @@ $posts = App\Models\Post::with(['user', 'comments.user', 'comments.replies.user'
    </div>
    </div>
    </form>
+   @else
+   <!-- If user is not logged in, show a message with login link -->
+   <p>Please <a href="{{ route('login') }}">log in</a> to comment.</p>
+   @endif
    </div>
    </li>
-   @foreach($post->comments as $comment)
+@foreach($post->comments as $comment)
    <li class="media">
-   <a href="#" class="pull-left">
-   <img src="{{ asset('frontend/assets/images/users/user-2.jpg') }}" alt="" class="img-circle">
-   </a>
-   <div class="media-body">
-   <strong>{{ $comment->user->name }}</strong>
-   <span>{{ $comment->created_at->diffForHumans() }}</span>
-   <p>{{ $comment->comment_text }}</p>
-   <!-- Like & Reply Buttons -->
-   <button type="button" class="btn btn-link fs-8" onclick="likeComment({{ $comment->id }})">Like</button>
-   <button type="button" class="btn btn-link fs-8" data-toggle="collapse" data-target="#replyForm{{ $comment->id }}">Reply</button>
-   <!-- Reply Form -->
-   <div id="replyForm{{ $comment->id }}" class="collapse mt-3">
-   <form action="{{ route('comments.reply') }}" method="POST">
-   @csrf
-   <input type="hidden" name="comment_id" value="{{ $comment->id }}">
-   <div class="input-group">
-   <input type="text" class="form-control comment-input" name="reply_text" placeholder="Write a replly...">
-   <div class="input-group-btn">
-   <button type="submit" class="btn comment-form-btn">
-   <i class='bx bx-send'></i> 
-   </button>
-   </div>
-   </div>
-   </form>
-   </div>
-   <!-- Display Replies -->
-   @foreach($comment->replies as $reply)
-   <div class="media mt-3">
-   <a href="#" class="pull-left">
-   <img src="{{ asset('frontend/assets/images/users/user-3.jpg') }}" alt="" class="img-circle">
-   </a>
-   <div class="media-body">
-   <strong>{{ $reply->user->name }}</strong>
-   <span>{{ $reply->created_at->diffForHumans() }}</span>
-   <p>{{ $reply->reply_text }}</p>
-   </div>
-   </div>
-   @endforeach
-   </div>
+      <a href="#" class="pull-left">
+         <!-- Show User Profile Picture -->
+         <img src="{{ asset($comment->user->photo) }}" alt="" class="img-circle">
+      </a>
+      <div class="media-body">
+         <strong>{{ $comment->user->name }}</strong>
+         <span>{{ $comment->created_at->diffForHumans() }}</span>
+         <p>{{ $comment->comment_text }}</p>
+         <!-- Like & Reply Buttons -->
+         <button type="button" class="btn btn-link fs-8" onclick="likeComment({{ $comment->id }})">Like</button>
+         <button type="button" class="btn btn-link fs-8" data-toggle="collapse" data-target="#replyForm{{ $comment->id }}">Reply</button>
+
+         <!-- Reply Form -->
+         <div id="replyForm{{ $comment->id }}" class="collapse mt-3">
+            @if(auth()->check())
+               <form action="{{ route('comments.reply') }}" method="POST" class="reply-form">
+                  @csrf
+                  <input type="hidden" name="comment_id" value="{{ $comment->id }}">
+                  <div class="input-group">
+                     <input type="text" class="form-control comment-input" name="reply_text" placeholder="Write a reply...">
+                     <div class="input-group-btn">
+                        <button type="submit" class="btn comment-form-btn">
+                           <i class='bx bx-send'></i> 
+                        </button>
+                     </div>
+                  </div>
+               </form>
+            @else
+               <p class="text-muted">Please <a href="{{ route('login') }}">login</a> to reply.</p>
+            @endif
+         </div>
+
+         <!-- Display Replies -->
+         @foreach($comment->replies as $reply)
+         <div class="media mt-3">
+            <a href="#" class="pull-left">
+               <!-- Show User Profile Picture for Reply -->
+               <img src="{{ asset($reply->user->photo) }}" alt="" class="img-circle">
+            </a>
+            <div class="media-body">
+               <strong>{{ $reply->user->name }}</strong>
+               <span>{{ $reply->created_at->diffForHumans() }}</span>
+               <p>{{ $reply->reply_text }}</p>
+            </div>
+         </div>
+         @endforeach
+      </div>
    </li>
-   @endforeach
-   </ul>
+@endforeach
+
    </div>
    </div>
    </div>

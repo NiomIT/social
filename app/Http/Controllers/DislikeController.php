@@ -7,20 +7,23 @@ use Illuminate\Http\Request;
 
 class DislikeController extends Controller
 {
-    public function dislike(Request $request)
+    public function store(Request $request)
     {
-        $dislike = Dislike::where('user_id', $request->user_id)->where('post_id', $request->post_id)->first();
-        if ($dislike) {
-            $dislike->dislike_count++;
-        } else {
-            $dislike = new Dislike();
-            $dislike->user_id = $request->user_id;
-            $dislike->post_id = $request->post_id;
-            $dislike->dislike_count = 1;
+        $existingDislike = Dislike::where('user_id', $request->user_id)
+                                  ->where('post_id', $request->post_id)
+                                  ->first();
+
+        if ($existingDislike) {
+            return response()->json(['message' => 'Already disliked'], 400);
         }
 
+        $dislike = new Dislike();
+        $dislike->user_id = $request->user_id;
+        $dislike->post_id = $request->post_id;
         $dislike->save();
 
-        return response()->json($dislike);
+        $dislikeCount = Dislike::where('post_id', $request->post_id)->count();
+
+        return response()->json(['dislike_count' => $dislikeCount]);
     }
 }

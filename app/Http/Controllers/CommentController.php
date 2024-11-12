@@ -16,11 +16,8 @@ class CommentController extends Controller
         $comment->comment_text = $request->comment_text;
         $comment->save();
 
-        return response()->json([
-            'success' => true,
-            'comment_text' => $comment->comment_text,
-            'user_name' => auth()->user()->name
-        ]);
+        return redirect()->back();
+
     }
 
     public function reply(Request $request)
@@ -31,6 +28,7 @@ class CommentController extends Controller
         $reply->reply_text = $request->reply_text;
         $reply->save();
 
-        return response()->json($reply);
+        return redirect()->back();
+
     }
 }
